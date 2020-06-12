@@ -1,6 +1,6 @@
 /** expo install react-native-safe-area-context @react-navigation/native @react-navigation/stack react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view --save */
 /** expo install */
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import {
   NavigationContainer,
@@ -13,6 +13,18 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 /** Home component */
 const HomeScreen = () => {
   const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={styles.buttonRound}>
+          <Text style={{ fontSize: 25, fontWeight: "100", color: "#fff" }}>
+            ?
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Home Screen</Text>
@@ -36,6 +48,19 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { user, action }: any = route.params;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={styles.buttonRound}>
+          <Text style={{ fontSize: 28, fontWeight: "100", color: "#fff" }}>
+            ?
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile Screen</Text>
@@ -71,13 +96,37 @@ const ProfileScreen = () => {
 };
 
 const Stack = createStackNavigator();
+const CustomHeader = () => {
+  return (
+    <View>
+      <Text>Test</Text>
+    </View>
+  );
+};
 
 /** Main component */
 const DraftNavigation = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#233278",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "100",
+            fontSize: 25,
+          },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerTitle: "Welcome",
+          }}
+        />
         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -90,6 +139,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonRound: {
+    marginRight: 16,
+    width: 40,
+    height: 40,
+    borderWidth: 2,
+    borderColor: "#FFF",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },
