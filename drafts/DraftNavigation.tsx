@@ -1,7 +1,12 @@
-/** npm install react-native-safe-area-context @react-navigation/native @react-navigation/stack react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view --save */
+/** expo install react-native-safe-area-context @react-navigation/native @react-navigation/stack react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view --save */
+/** expo install */
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -14,7 +19,10 @@ const HomeScreen = () => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          navigation.navigate("Profile");
+          navigation.navigate("Profile", {
+            user: "Julian",
+            action: "Conquer",
+          });
         }}
       >
         <Text style={{ color: "#fff" }}>Go Profile</Text>
@@ -26,9 +34,14 @@ const HomeScreen = () => {
 /** Profile component */
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { user, action }: any = route.params;
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile Screen</Text>
+      <Text style={{ fontWeight: "600", marginVertical: 32 }}>
+        {user} will {action} the world
+      </Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -36,6 +49,22 @@ const ProfileScreen = () => {
         }}
       >
         <Text style={{ color: "#fff" }}>Go Home</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          {
+            borderColor: "#23A6D9",
+            borderWidth: 1,
+            marginTop: 12,
+            backgroundColor: "#fff",
+          },
+        ]}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={{ color: "#23A6D9" }}>Go Back</Text>
       </TouchableOpacity>
     </View>
   );
