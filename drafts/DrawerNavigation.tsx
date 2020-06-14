@@ -1,10 +1,15 @@
 /** expo install @react-navigation/drawer @expo/vector-icons*/
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { FontAwesome5 } from "@expo/vector-icons";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 
 const Screen = (props: any) => {
@@ -43,15 +48,87 @@ const DetailsScreen = (props: any) => (
 );
 
 const Drawer = createDrawerNavigator();
+
+/** custom */
+const CustomNavigator = (props: any) => {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Help"
+        icon={(props) => (
+          <Feather name="help-circle" size={props.size} color="#A36267" />
+        )}
+        onPress={() => alert("Link to help")}
+      />
+    </DrawerContentScrollView>
+  );
+};
+
+/** navigation */
 const DrawerNavigation = () => {
+//   const dimensions = useWindowDimensions();
+
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Settings" component={SettingsScreen} />
-        <Drawer.Screen name="Bills" component={BillsScreen} />
-        <Drawer.Screen name="Details" component={DetailsScreen} />
+      <Drawer.Navigator
+        initialRouteName="Home"        
+        drawerStyle={{
+          backgroundColor: "#c6cbef",
+          width: 240,
+        }}
+        drawerContent={(props) => <CustomNavigator {...props} />}
+      >
+        <Drawer.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            drawerIcon: ({ focused: boolean, color: string, size: number }) => (
+              <Feather name="home" size={16} color="#23A267" />
+            ),
+            title: "Welcome",
+          }}
+        />
+        <Drawer.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            drawerIcon: ({ focused: boolean, color: string, size: number }) => (
+              <Feather name="user" size={16} color="#23A267" />
+            ),
+            title: "Profile",
+          }}
+        />
+        <Drawer.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            drawerIcon: ({ focused: boolean, color: string, size: number }) => (
+              <Feather name="settings" size={16} color="#23A267" />
+            ),
+            title: "Settings",
+          }}
+        />
+        <Drawer.Screen
+          name="Bills"
+          component={BillsScreen}
+          options={{
+            drawerIcon: ({ focused: boolean, color: string, size: number }) => (
+              <Feather name="dollar-sign" size={16} color="#23A267" />
+            ),
+            title: "Bills",
+          }}
+        />
+        <Drawer.Screen
+          name="Details"
+          component={DetailsScreen}
+          options={{
+            drawerIcon: ({ focused: boolean, color: string, size: number }) => (
+              <Feather name="list" size={16} color="#23A267" />
+            ),
+            title: "Details",
+          }}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );
