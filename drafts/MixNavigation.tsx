@@ -13,9 +13,9 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const CustomHeader = (props: any) => {
-  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -35,7 +35,7 @@ const CustomHeader = (props: any) => {
         }}
       >
         {!props.initial ? (
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()}>
             <FontAwesome5 name="arrow-left" size={24} color="#161924" />
           </TouchableOpacity>
         ) : null}
@@ -60,22 +60,27 @@ const CustomHeader = (props: any) => {
           justifyContent: "center",
         }}
       >
-        <FontAwesome5 name="bars" size={24} color="#161924" />
+        <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+          <FontAwesome5 name="bars" size={24} color="#161924" />
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
+const HomeScreen = (props: any) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CustomHeader title="Home" initial={true}></CustomHeader>
+      <CustomHeader
+        title="Home"
+        initial={true}
+        navigation={props.navigation}
+      ></CustomHeader>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Home!</Text>
         <TouchableOpacity
           style={{ marginTop: 20 }}
-          onPress={() => navigation.navigate("HomeDetails")}
+          onPress={() => props.navigation.navigate("HomeDetails")}
         >
           <Text>Go Home details</Text>
         </TouchableOpacity>
@@ -84,10 +89,13 @@ const HomeScreen = () => {
   );
 };
 
-const HomeScreenDetails = () => {
+const HomeScreenDetails = (props: any) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CustomHeader title="Home Details"></CustomHeader>
+      <CustomHeader
+        title="Home Details"
+        navigation={props.navigation}
+      ></CustomHeader>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Home Details!</Text>
       </View>
@@ -95,16 +103,19 @@ const HomeScreenDetails = () => {
   );
 };
 
-const SettingsScreen = () => {
-  const navigation = useNavigation();
+const SettingsScreen = (props: any) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CustomHeader title="Settings" initial={true}></CustomHeader>
+      <CustomHeader
+        title="Settings"
+        initial={true}
+        navigation={props.navigation}
+      ></CustomHeader>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Settings!</Text>
         <TouchableOpacity
           style={{ marginTop: 20 }}
-          onPress={() => navigation.navigate("SettingsDetails")}
+          onPress={() => props.navigation.navigate("SettingsDetails")}
         >
           <Text>Go details</Text>
         </TouchableOpacity>
@@ -113,10 +124,13 @@ const SettingsScreen = () => {
   );
 };
 
-const SettingsScreenDetails = () => {
+const SettingsScreenDetails = (props: any) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CustomHeader title="Settings Details"></CustomHeader>
+      <CustomHeader
+        title="Settings Details"
+        navigation={props.navigation}
+      ></CustomHeader>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Settings details!</Text>
       </View>
@@ -127,6 +141,7 @@ const SettingsScreenDetails = () => {
 const Tab = createBottomTabNavigator();
 const StackHome = createStackNavigator();
 const StackSettings = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 // to avoid a second header
 const navOptionHandler = () => ({
@@ -187,16 +202,40 @@ const tabIconOptions = (props: any) => ({
   },
 });
 
+export const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={tabIconOptions}
+      tabBarOptions={{ activeTintColor: "tomato", inactiveTintColor: "gray" }}
+    >
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Settings" component={SettingStack} />
+    </Tab.Navigator>
+  );
+};
+
+const NotificationScreen = (props: any) => {
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <CustomHeader
+        title="Notifications"
+        initial={true}
+        navigation={props.navigation}
+      ></CustomHeader>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Notifications!</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
+
 export const MixNavigation = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={tabIconOptions}
-        tabBarOptions={{ activeTintColor: "tomato", inactiveTintColor: "gray" }}
-      >
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen name="Settings" component={SettingStack} />
-      </Tab.Navigator>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={TabNavigator} />
+        <Drawer.Screen name="Notifications" component={NotificationScreen} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
